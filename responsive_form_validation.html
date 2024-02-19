@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsive Form with Validation</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f0f0;
+            margin: 20px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 16px;
+            box-sizing: border-box;
+        }
+
+        #password-strength {
+            margin-top: 8px;
+            color: #888;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 10px;
+        }
+
+        .error-message {
+            color: red;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <form id="myForm" onsubmit="return validateForm()">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" oninput="checkPasswordStrength()" required>
+        <div id="password-strength"></div>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <div id="success-message" class="success-message"></div>
+    <div id="error-message" class="error-message"></div>
+
+    <script>
+        function validateForm() {
+            var name = document.getElementById('name').value;
+            var email = document.getElementById('email').value;
+            var password = document.getElementById('password').value;
+
+            // Basic email validation
+            var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                displayErrorMessage('Invalid email format');
+                return false;
+            }
+
+            // Password strength validation
+            var passwordStrength = checkPasswordStrength();
+            if (passwordStrength < 3) {
+                displayErrorMessage('Password should be strong');
+                return false;
+            }
+
+            // If all validations pass, display success message
+            displaySuccessMessage('Form submitted successfully!');
+            return false; // Prevent form submission for this example
+        }
+
+        function displaySuccessMessage(message) {
+            var successMessage = document.getElementById('success-message');
+            var errorMessage = document.getElementById('error-message');
+
+            successMessage.innerHTML = message;
+            errorMessage.innerHTML = '';
+
+            successMessage.style.display = 'block';
+            errorMessage.style.display = 'none';
+        }
+
+        function displayErrorMessage(message) {
+            var successMessage = document.getElementById('success-message');
+            var errorMessage = document.getElementById('error-message');
+
+            successMessage.innerHTML = '';
+            errorMessage.innerHTML = message;
+
+            successMessage.style.display = 'none';
+            errorMessage.style.display = 'block';
+        }
+
+        function checkPasswordStrength() {
+            var password = document.getElementById('password').value;
+            var strengthMeter = document.getElementById('password-strength');
+
+            // Check password strength (for simplicity, using a basic algorithm here)
+            var strength = 0;
+            if (password.length >= 8) strength++;
+            if (password.match(/[a-z]+/)) strength++;
+            if (password.match(/[A-Z]+/)) strength++;
+            if (password.match(/[0-9]+/)) strength++;
+
+            // Display strength meter
+            strengthMeter.innerHTML = 'Password Strength: ' + strength + '/4';
+
+            return strength;
+        }
+    </script>
+
+</body>
+
+</html>
